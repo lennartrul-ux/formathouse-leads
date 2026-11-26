@@ -501,6 +501,18 @@ def api_reset():
     return jsonify({"ok": True, "message": msg})
 
 
+def _release_server_socket() -> None:
+    """Werkzeug maakt zijn luistersocket erfbaar (WERKZEUG_SERVER_FD). Bij os.execv bleef de
+    oude poort dan open zonder dat iemand antwoordde: de nieuwe versie startte op een andere
+    poort en het browservenster wachtte eeuwig. Sluit de socket bij exec en wis de variabele."""
+    fd = os.environ.pop("WERKZEUG_SERVER_FD", None)
+    if fd and fd.isdigit():
+        try:
+            os.set_inheritable(int(fd), False)
+        except OSError:
+            pass
+
+
 @app.post("/api/update")
 def api_update():
     """Nieuwste versie ophalen; daarna herstart de app zichzelf."""
@@ -518,6 +530,7 @@ def api_update():
         time.sleep(1.0)
         if res.deps_changed:
             subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-e", str(updater.PROJECT_ROOT)])
+        _release_server_socket()
         os.execv(sys.executable, [sys.executable, "-m", "formathouse.webapp", "--no-browser"])
     threading.Thread(target=restart, daemon=True).start()
     return jsonify({"ok": True, "restarting": True,

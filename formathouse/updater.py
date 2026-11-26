@@ -3,7 +3,7 @@
 - Vergelijkt de laatste commit van de branch met de geïnstalleerde versie (.fh_version).
 - Haalt bij een nieuwe versie de code op en vervangt alleen app-bestanden:
   je data (Documenten/Format House Leads) en .venv blijven onaangeroerd.
-- Privé-repository: zet een GitHub-token met leestoegang in Instellingen (GITHUB_TOKEN).
+- Openbare repository: geen token nodig. Een GitHub-token (GITHUB_TOKEN) is optioneel.
 Exitcodes (python -m formathouse.updater): 0 = niets te doen of bijgewerkt,
 3 = bijgewerkt én afhankelijkheden gewijzigd (opnieuw installeren), 1 = mislukt.
 """
@@ -22,11 +22,12 @@ import requests
 
 from .config import PROJECT_ROOT
 
-REPO = os.getenv("FH_UPDATE_REPO", "lennartrul-ux/Bookflow")
-BRANCH = os.getenv("FH_UPDATE_BRANCH", "formathouse-leads")
-SUBDIR = "formathouse-leads"              # map binnen de repository
+REPO = os.getenv("FH_UPDATE_REPO", "lennartrul-ux/formathouse-leads")
+BRANCH = os.getenv("FH_UPDATE_BRANCH", "main")
+SUBDIR = ""                               # app staat in de hoofdmap van de repository
 VERSION_FILE = PROJECT_ROOT / ".fh_version"
 KEEP = {".env", ".venv", "leads.db", "output", ".fh_version", ".git"}
+SKIP = {".github", "render.yaml"}        # alleen voor GitHub/Render, niet voor de lokale app
 DEP_FILES = {"pyproject.toml", "requirements.txt"}
 API = "https://api.github.com"
 
@@ -56,8 +57,8 @@ def installed_version() -> str | None:
 def latest_version(token: str, session=requests) -> tuple[str | None, str]:
     r = session.get(f"{API}/repos/{REPO}/commits/{BRANCH}", headers=_headers(token), timeout=10)
     if r.status_code in (401, 403, 404):
-        return None, ("Geen toegang tot de privé-repository. Vul in Instellingen een GitHub-token "
-                      "met leestoegang in om automatisch bij te werken.")
+        return None, ("Kon de repository niet bereiken (geen toegang of te veel aanvragen). "
+                      "Probeer later opnieuw, of vul in Instellingen een GitHub-token in.")
     r.raise_for_status()
     return r.json()["sha"], ""
 
@@ -69,14 +70,14 @@ def apply_zip(data: bytes, root: Path = PROJECT_ROOT) -> bool:
     with zipfile.ZipFile(io.BytesIO(data)) as z, tempfile.TemporaryDirectory() as tmp:
         names = z.namelist()
         top = names[0].split("/")[0]
-        prefix = f"{top}/{SUBDIR}/"
+        prefix = f"{top}/{SUBDIR}/" if SUBDIR else f"{top}/"
         members = [n for n in names if n.startswith(prefix) and not n.endswith("/")]
         if not any(n.endswith("formathouse/__init__.py") for n in members):
             raise RuntimeError("download bevat de app niet")
         staging = Path(tmp) / "app"
         for n in members:
             rel = n[len(prefix):]
-            if not rel or rel.split("/")[0] in KEEP:
+            if not rel or rel.split("/")[0] in KEEP | SKIP:
                 continue
             dest = (staging / rel).resolve()
             if staging.resolve() not in dest.parents:

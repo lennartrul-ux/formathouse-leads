@@ -15,7 +15,7 @@ goedgekeurde mails automatisch op hun geplande tijdstip.
 ## Updates en je data
 - **Data:** leads, instellingen (`.env`) en exports staan in `Documenten/Format House Leads`, los van de app. Een update raakt ze nooit.
 - **Updates:** bij elke start haalt de app de nieuwste versie van GitHub (`formathouse/updater.py`). Ook de knop "Bijwerken" doet dat, waarna de app zichzelf herstart.
-- **Privé-repository:** vul één keer een GitHub-token met alleen leesrechten in bij Instellingen. Zie `LEES MIJ.txt`.
+- **Repository:** `lennartrul-ux/formathouse-leads` (openbaar, branch `main`). Een GitHub-token is niet nodig.
 
 ## Sectoren en filters
 - **Sectoren:** horeca, fitness/wellness/beauty, lifestyle, immo, verzekeringsmakelaars, interieur, bouw, esthetiek, padel/golf, events, food, tuin, auto en overig (op aanvraag). Zie `formathouse/briefing.py`.

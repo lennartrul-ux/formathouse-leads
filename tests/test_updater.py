@@ -10,7 +10,7 @@ def zipball(files: dict[str, str]) -> bytes:
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w") as z:
         for path, text in files.items():
-            z.writestr(f"lennartrul-ux-Bookflow-abc123/{path}", text)
+            z.writestr(f"lennartrul-ux-formathouse-leads-abc123/{path}", text)
     return buf.getvalue()
 
 
@@ -39,12 +39,13 @@ def make_app(root):
 def test_update_replaces_code_keeps_data(tmp_path):
     root = tmp_path / "app"
     make_app(root)
-    z = zipball({"formathouse-leads/formathouse/__init__.py": "nieuw",
-                 "formathouse-leads/formathouse/webapp.py": "app",
-                 "formathouse-leads/pyproject.toml": "deps v2",
-                 "formathouse-leads/.env": "OVERSCHREVEN",
-                 "formathouse-leads/Start Format House.command": "#!/bin/bash",
-                 "README.md": "andere map in de repo"})
+    z = zipball({"formathouse/__init__.py": "nieuw",
+                 "formathouse/webapp.py": "app",
+                 "pyproject.toml": "deps v2",
+                 ".env": "OVERSCHREVEN",
+                 "Start Format House.command": "#!/bin/bash",
+                 "render.yaml": "alleen voor Render",
+                 ".github/workflows/x.yml": "alleen voor GitHub"})
     gh = GH(zip_bytes=z)
     res = updater.update(token="tok", session=gh, root=root)
     assert res.status == "bijgewerkt" and res.deps_changed
@@ -52,7 +53,8 @@ def test_update_replaces_code_keeps_data(tmp_path):
     assert not (root / "formathouse" / "weg.py").exists()
     assert (root / ".env").read_text() == "GEHEIM=1"          # data blijft
     assert (root / "leads.db").read_text() == "data"
-    assert not (root / "README.md").exists()                   # alleen de app-map
+    assert not (root / "render.yaml").exists()                 # geen Render/GitHub-bestanden
+    assert not (root / ".github").exists()
     assert (root / "Start Format House.command").stat().st_mode & 0o111
     assert gh.calls[0][1] == "Bearer tok"
     # tweede keer: al actueel, geen download
@@ -61,11 +63,11 @@ def test_update_replaces_code_keeps_data(tmp_path):
     assert len(gh2.calls) == 1
 
 
-def test_private_repo_without_token(tmp_path):
+def test_no_access(tmp_path):
     root = tmp_path / "app"
     make_app(root)
     res = updater.update(token="", session=GH(code=404), root=root)
-    assert res.status == "geen_toegang" and "token" in res.message
+    assert res.status == "geen_toegang" and "repository" in res.message
     assert (root / "formathouse" / "__init__.py").read_text() == "oud"
 
 
@@ -75,3 +77,8 @@ def test_bad_zip_does_not_break_app(tmp_path):
     res = updater.update(token="t", session=GH(zip_bytes=zipball({"iets/anders.txt": "x"})), root=root)
     assert res.status == "fout"
     assert (root / "formathouse" / "__init__.py").read_text() == "oud"
+
+
+def test_points_to_own_repository():
+    assert updater.REPO == "lennartrul-ux/formathouse-leads"
+    assert updater.BRANCH == "main" and updater.SUBDIR == ""

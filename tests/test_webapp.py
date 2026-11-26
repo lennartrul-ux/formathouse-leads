@@ -116,3 +116,18 @@ def test_import_and_backup(client, tmp_path):
     assert [x["name"] for x in d["rows"]] == ["Pilotzaak"]
     b = client.get("/download/backup.db", base_url=LOCAL)
     assert b.status_code == 200 and b.data[:15] == b"SQLite format 3"
+
+
+def test_restart_releases_listening_socket(monkeypatch):
+    """Na 'Bijwerken' mag de oude luistersocket niet naar de nieuwe versie lekken."""
+    import os
+    import socket
+
+    from formathouse import webapp
+    s = socket.socket()
+    s.set_inheritable(True)
+    monkeypatch.setenv("WERKZEUG_SERVER_FD", str(s.fileno()))
+    webapp._release_server_socket()
+    assert "WERKZEUG_SERVER_FD" not in os.environ
+    assert not s.get_inheritable()
+    s.close()

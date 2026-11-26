@@ -17,17 +17,12 @@ WINDOWS
    (vink "Add Python to PATH" aan).
 2. Dubbelklik op "Start Format House.bat".
 
-AUTOMATISCH BIJWERKEN (eenmalig instellen)
+AUTOMATISCH BIJWERKEN
 De app controleert bij elke start of er een nieuwe versie is en installeert die zelf.
 Je data blijft altijd bewaard: die staat apart in Documenten/Format House Leads.
-Omdat de code in een privé-repository staat, heeft de app één keer een leessleutel nodig:
-1. Ga naar https://github.com/settings/personal-access-tokens/new
-2. Naam: "Format House updates" · Vervaldatum: kies bv. 1 jaar.
-3. Repository access: "Only select repositories" → kies "Bookflow".
-4. Permissions → Repository permissions → "Contents": Read-only.
-5. Klik op "Generate token" en kopieer de code (begint met github_pat_).
-6. Plak die in de app: Instellingen → "GitHub-token" → Bewaren.
-Daarna volstaat de knop "Bijwerken" rechtsboven, of gewoon de app opnieuw starten.
+De code staat in de openbare repository github.com/lennartrul-ux/formathouse-leads,
+dus je hoeft niets in te stellen. Gebruik de knop "Bijwerken" rechtsboven, of start
+de app gewoon opnieuw.
 
 IN DE APP
 - Start: leads zoeken (kies een sector en stad) → verwerken → Excel downloaden.

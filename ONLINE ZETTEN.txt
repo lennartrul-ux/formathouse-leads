@@ -23,8 +23,8 @@ STAP 1 — Database (Supabase)
 
 STAP 2 — App (Render)
 1. Ga naar https://render.com en meld je aan met GitHub.
-2. Klik op "New" → "Blueprint". Kies de repository "Bookflow" en de branch
-   "formathouse-leads". Render leest het bestand render.yaml.
+2. Klik op "New" → "Blueprint". Kies de repository "formathouse-leads" (branch "main").
+   Render leest het bestand render.yaml.
 3. Render vraagt twee waarden:
    - DATABASE_URL = de URI uit stap 1
    - APP_PASSWORD = een wachtwoord naar keuze om in te loggen
@@ -38,7 +38,7 @@ STAP 3 — Inloggen en instellen
 
 STAP 4 — Mails automatisch laten vertrekken (optioneel, gratis)
 1. Kopieer in Render bij je service → "Environment" de waarde van CRON_TOKEN.
-2. Ga op GitHub naar de repository Bookflow → Settings → Secrets and variables →
+2. Ga op GitHub naar de repository formathouse-leads → Settings → Secrets and variables →
    Actions → "New repository secret". Maak er twee aan:
    - APP_URL    = je app-link (bv. https://formathouse-leads.onrender.com)
    - CRON_TOKEN = de waarde uit Render
@@ -51,5 +51,5 @@ STAP 5 — E-mail versturen (pas nodig als je echt gaat mailen)
 4. Vul in de app bij Instellingen in: Brevo API-sleutel en Afzender
    (een adres op je outreach-domein).
 
-Je code staat op GitHub. Elke wijziging die ik push op de branch "formathouse-leads",
+Je code staat op GitHub. Elke wijziging die ik push op de branch "main" van formathouse-leads,
 zet Render automatisch online.
