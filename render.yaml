@@ -13,7 +13,7 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.8
-      - key: DATABASE_URL       # Supabase → Connect → Session pooler (URI)
+      - key: DATABASE_URL       # Neon → Connect → verbindings-URL
         sync: false
       - key: APP_PASSWORD       # wachtwoord om in te loggen
         sync: false

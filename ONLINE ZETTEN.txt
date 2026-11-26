@@ -7,19 +7,16 @@ Wat het gratis aanbod betekent:
 - De app valt in slaap na 15 minuten zonder bezoek. Openen duurt dan ± 1 minuut.
 - Laat het tabblad openstaan zolang er een taak loopt (zoeken/verwerken), anders kan
   die onderbroken worden. Opnieuw starten gaat gewoon verder waar hij was.
-- Supabase pauzeert een gratis project na ± 7 dagen zonder gebruik. Dan moet je het
-  in het Supabase-dashboard met één klik terug aanzetten. Stap 4 voorkomt dat op werkdagen.
+- De database staat gratis bij Neon (neon.tech). Die slaapt als niemand hem gebruikt en
+  wordt vanzelf wakker bij het volgende bezoek (een paar seconden).
 
 ──────────────────────────────────────────────────────────────────────
-STAP 1 — Database (Supabase)
-1. Ga naar https://supabase.com/dashboard → "New project".
-   Naam: formathouse-leads · Regio: Frankfurt (EU) · kies een databasewachtwoord
-   en bewaar het.
-2. Wacht tot het project klaar is en klik bovenaan op "Connect".
-3. Kies "Session pooler" en kopieer de URI. Die ziet er zo uit:
-   postgresql://postgres.xxxx:[YOUR-PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:5432/postgres
-4. Vervang [YOUR-PASSWORD] door je databasewachtwoord. Dit is je DATABASE_URL.
-   De tabellen maakt de app zelf aan.
+STAP 1 — Database (Neon)
+1. Ga naar https://console.neon.tech en meld je aan (bv. met GitHub).
+2. "Create project" → Naam: formathouse-leads · Regio: AWS Europe Central 1 (Frankfurt).
+3. Klik in het project op "Connect" en kopieer de verbindings-URL. Die ziet er zo uit:
+   postgresql://neondb_owner:xxxx@ep-xxxx.eu-central-1.aws.neon.tech/neondb?sslmode=require
+   Dit is je DATABASE_URL. De tabellen maakt de app zelf aan.
 
 STAP 2 — App (Render)
 1. Ga naar https://render.com en meld je aan met GitHub.

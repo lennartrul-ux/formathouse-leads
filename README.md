@@ -30,7 +30,7 @@ goedgekeurde mails automatisch op hun geplande tijdstip.
 ## Gratis online (via een link, met wachtwoord)
 Zie **`ONLINE ZETTEN.txt`**. In het kort:
 - **Render** (gratis) draait de app.
-- **Supabase** (gratis) bewaart de leads.
+- **Neon** (gratis Postgres) bewaart de leads.
 - **Brevo** (gratis) verstuurt de mails over HTTPS. Render blokkeert SMTP op gratis servers.
 - Een **GitHub Actions**-taak (`.github/workflows/formathouse-mail-tick.yml`) wekt de app op werkdagen elk kwartier en laat de geplande mails vertrekken.
 

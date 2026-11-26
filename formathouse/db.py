@@ -174,7 +174,7 @@ _LOCAL = __import__("threading").local()
 
 
 def connect(path: Path | str):
-    """SQLite-bestand (lokaal), of Postgres/Supabase als DATABASE_URL is ingesteld."""
+    """SQLite-bestand (lokaal), of Postgres (Neon) als DATABASE_URL is ingesteld."""
     import os
     url = os.getenv("DATABASE_URL", "").strip()
     if url:
